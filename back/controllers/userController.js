@@ -7,6 +7,9 @@ export const loginHandler = async(req, res, next) => {
 export const signUpHandler = async(req, res, next) => {
 
     const { username, password } = req.body;
+    console.log(username);
+    console.log(password);
+
     try {
         const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -15,7 +18,7 @@ export const signUpHandler = async(req, res, next) => {
 
         // Save the user to the database
         await user.save();
-        res.send(user.username)
+        res.send(user)
     } catch (error) {
         console.log(error)
     }
