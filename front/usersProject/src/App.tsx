@@ -4,14 +4,14 @@ import { useState, useEffect } from "react";
 function App() {
   const [message, setMessage] = useState("");
 
-  useEffect(() => {
-    fetch("http://localhost:2000")
-      .then((res) => res.json())
-      .then((data) => setMessage(data.message));
-  }, []);
+  // useEffect(() => {
+  //   fetch("http://localhost:2000")
+  //     .then((res) => res.json())
+  //     .then((data) => setMessage(data.message));
+  // }, []);
   return (
     <>
-      <h1 style={{color: 'red'}}>{message}</h1>
+      <h1 style={{ color: "red" }}>aaaaaaaaaaa</h1>
     </>
   );
 }
