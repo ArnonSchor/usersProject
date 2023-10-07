@@ -11,7 +11,7 @@ function App() {
   // }, []);
   return (
     <>
-      <h1 style={{ color: "red" }}>aaaaaaaaaaa</h1>
+      <h1>sign up to our page!</h1>
       <form action="http://localhost:2000/api/signUp" method="post">
         <input
           name="username"

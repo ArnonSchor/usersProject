@@ -13,10 +13,8 @@ export const signUpHandler = async(req, res, next) => {
     try {
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        // Create a new user with the hashed password
         const user = new User({ username, password: hashedPassword });
 
-        // Save the user to the database
         await user.save();
         res.send(user)
     } catch (error) {
