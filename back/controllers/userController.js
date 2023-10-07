@@ -16,7 +16,7 @@ export const signUpHandler = async(req, res, next) => {
         await user.save();
         res.redirect('http://localhost:5173/');
 
-    } catch (error) {}
+    } catch (error) { console.log(error) }
 
 
 }
