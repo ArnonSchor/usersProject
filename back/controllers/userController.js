@@ -14,7 +14,6 @@ export const signUpHandler = async(req, res, next) => {
         const user = new User({ username, password: hashedPassword });
 
         await user.save();
-        res.redirect('http://localhost:5173/');
 
     } catch (error) { console.log(error) }
 
