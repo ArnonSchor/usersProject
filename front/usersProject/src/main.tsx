@@ -6,6 +6,7 @@ import Signup from "./controllers/Signup.tsx";
 import ErrorPage from "./controllers/ErrorPage.tsx";
 import { HomePage } from "./controllers/HomePage.tsx";
 import SignIn from "./controllers/SignIn.tsx";
+import { List } from "./controllers/List.tsx";
 
 const router = createBrowserRouter([
   {
