@@ -4,7 +4,6 @@ import User from "../models/userSchema.js";
 
 export const loginHandler = async(req, res, next) => {
     const { username, password } = req.body;
-    res.console.log(username);
 }
 
 export const signUpHandler = async(req, res, next) => {

@@ -6,7 +6,7 @@ function Signup() {
     <div className="body">
       <div className="signup-modal">
         <h1>sign up</h1>
-        <SignupForm navigate="/" />
+        <SignupForm route="/" />
       </div>
     </div>
   );
