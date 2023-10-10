@@ -14,12 +14,12 @@ export const signUpHandler = async(req, res, next) => {
     try {
         // const hashedPassword = await bcrypt.hash(password, 10);
 
-        const user = new User({
+        const user = await User.create({
             username,
             password //: hashedPassword/
         });
 
-        await user.save();
+        res.send('SAF;LKJHGKJ')
     } catch (error) {
         console.log(error)
     }

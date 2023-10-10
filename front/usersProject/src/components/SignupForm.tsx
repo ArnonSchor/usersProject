@@ -1,19 +1,24 @@
 import "bootstrap/dist/css/bootstrap.min.css";
+import { useState } from "react";
 import { Form, Button } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 export const SignupForm = (props: any) => {
+  const [credentials, setCredentials] = useState({
+    username: "",
+    password: "",
+  });
   const navigate = useNavigate();
-
-  // the handle submit is not working, the db update with no data, last  time it worked it was using action.the axios.post is the area of the problem
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const formData = new FormData(event.currentTarget);
 
     try {
-      await axios.post("http://localhost:2000/api/signUp", formData);
-      console.log(formData);
+      const axiosInstance = axios.create({
+        baseURL: "http://localhost:2000/api/",
+      });
+
+      await axiosInstance.post("signUp", { ...credentials });
       navigate(props.navigate);
     } catch (error) {
       console.error("Error submitting form:", error);
@@ -25,6 +30,9 @@ export const SignupForm = (props: any) => {
       <Form.Group className="mb-3" controlId="formBasicEmail">
         <Form.Label>username</Form.Label>
         <Form.Control
+          onChange={(e) =>
+            setCredentials({ ...credentials, username: e.target.value })
+          }
           required
           name="username"
           placeholder="Enter username"
@@ -39,7 +47,10 @@ export const SignupForm = (props: any) => {
         <Form.Label>Password</Form.Label>
         <Form.Control
           required
-          type="text"
+          onChange={(e) =>
+            setCredentials({ ...credentials, password: e.target.value })
+          }
+          type="password"
           name="password"
           placeholder="Password"
         />
