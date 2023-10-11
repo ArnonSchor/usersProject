@@ -1,55 +1,55 @@
 import "bootstrap/dist/css/bootstrap.min.css";
-import { Form, Button } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import axiosInstance from "../axiosInstance";
-import Input from "./Input";
-import { useState } from "react";
-import { SignupCredentials } from "../types";
+import { useFormik } from "formik";
 
 interface Props {
   route: string;
 }
-export const SignupForm = ({ route }: Props) => {
-  const [credentials, setCredentials] = useState<SignupCredentials>({
-    username: "",
-    password: "",
-    email: "",
-  });
-  const navigate = useNavigate();
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
 
-    try {
-      await axiosInstance.post("signUp", { ...credentials });
+export const SignupForm = ({ route }: Props) => {
+  const navigate = useNavigate();
+
+  const formik = useFormik({
+    initialValues: {
+      username: "",
+      password: "",
+      email: "",
+    },
+    onSubmit: async (values) => {
+      await axiosInstance.post("signUp", { ...values });
       navigate(route);
-    } catch (error) {
-      console.error("Error submitting form:", error);
-    }
-  };
+    },
+  });
 
   return (
-    <Form onSubmit={handleSubmit}>
-      <Input
+    <form onSubmit={formik.handleSubmit}>
+      <input
+        required
         name="username"
         placeholder="username"
         type="text"
-        credentials={credentials}
-        setCredentials={setCredentials}
-        value={credentials.username}
-        key="username"
+        onChange={formik.handleChange}
+        value={formik.values.username}
       />
-      <Input
-        name="username"
-        placeholder="username"
-        type="text"
-        credentials={credentials}
-        setCredentials={setCredentials}
-        value={credentials.password}
-        key="password"
+      <input
+        required
+        name="password"
+        placeholder="password"
+        type="password"
+        value={formik.values.password}
+        onChange={formik.handleChange}
       />
-      <Button variant="primary" type="submit">
-        Submit
-      </Button>
-    </Form>
+      <input
+        required
+        name="email"
+        placeholder="email"
+        type="email"
+        value={formik.values.email}
+        onChange={formik.handleChange}
+      />
+
+      <button type="submit">Submit</button>
+    </form>
   );
 };

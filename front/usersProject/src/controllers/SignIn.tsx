@@ -6,7 +6,7 @@ function SignIn() {
       <div className="signup-modal">
         <h1>sign in</h1>
 
-        <SignupForm navigate="/list" />
+        <SignupForm route="/list" />
       </div>
     </div>
   );
