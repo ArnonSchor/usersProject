@@ -1,7 +1,7 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import { useNavigate } from "react-router-dom";
 import axiosInstance from "../axiosInstance";
-import { useFormik } from "formik";
+import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 
 interface FormValues {
@@ -39,53 +39,38 @@ export const SignupForm = ({ route }: Props) => {
       .email("please enter a valid email")
       .required("Required"),
   });
-  const formik = useFormik({
-    initialValues,
-    onSubmit,
-    validationSchema,
-  });
 
   return (
-    <form onSubmit={formik.handleSubmit}>
-      <input
-        required
-        name="username"
-        placeholder="username"
-        type="text"
-        onChange={formik.handleChange}
-        onBlur={formik.handleBlur}
-        value={formik.values.username}
-      />
+    <Formik
+      initialValues={initialValues}
+      validationSchema={validationSchema}
+      onSubmit={onSubmit}
+    >
+      <Form>
+        <Field required name="username" placeholder="username" type="text" />
+        <ErrorMessage name="username" />
 
-      <input
-        required
-        name="password"
-        placeholder="password"
-        type="password"
-        value={formik.values.password}
-        onBlur={formik.handleBlur}
-        onChange={formik.handleChange}
-      />
-      <input
-        required
-        name="confirmPassword"
-        placeholder="confirm password"
-        type="password"
-        value={formik.values.confirmPassword}
-        onChange={formik.handleChange}
-        onBlur={formik.handleBlur}
-      />
-      <input
-        required
-        name="email"
-        placeholder="email"
-        type="email"
-        value={formik.values.email}
-        onChange={formik.handleChange}
-        onBlur={formik.handleBlur}
-      />
+        <Field
+          required
+          name="password"
+          placeholder="password"
+          type="password"
+        />
+        <ErrorMessage name="password" />
 
-      <button type="submit">Submit</button>
-    </form>
+        <Field
+          required
+          name="confirmPassword"
+          placeholder="confirm password"
+          type="password"
+        />
+        <ErrorMessage name="confirmPassword" />
+
+        <Field required name="email" placeholder="email" type="email" />
+        <ErrorMessage name="email" />
+
+        <button type="submit">Submit</button>
+      </Form>
+    </Formik>
   );
 };
