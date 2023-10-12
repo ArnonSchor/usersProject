@@ -1,13 +1,9 @@
-import { SignupForm } from "../components/SignupForm";
+import { SignInForm } from "../components/SignInForm";
 
 function SignIn() {
   return (
-    <div className="body">
-      <div className="signup-modal">
-        <h1>sign in</h1>
-
-        <SignupForm route="/list" />
-      </div>
+    <div>
+      <SignInForm route="/list" />
     </div>
   );
 }

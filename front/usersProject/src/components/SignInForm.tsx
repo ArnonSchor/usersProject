@@ -17,37 +17,25 @@ import Copyright from "./Copyright";
 interface FormValues {
   username: string;
   password: string;
-  confirmPassword: string;
-  email: string;
 }
 interface Props {
   route: string;
 }
 
-export const SignupForm = ({ route }: Props) => {
+export const SignInForm = ({ route }: Props) => {
   const navigate = useNavigate();
 
   const initialValues = {
     username: "",
     password: "",
-    confirmPassword: "",
-    email: "",
   };
   const onSubmit = async (values: FormValues) => {
-    if (values.password === values.confirmPassword) {
-      await axiosInstance.post("signUp", { ...values });
-      navigate(route);
-    } else {
-      alert("passwords do not match!");
-    }
+    await axiosInstance.post("signUp", { ...values });
+    navigate(route);
   };
   const validationSchema = Yup.object({
     username: Yup.string().required("Required"),
     password: Yup.string().required("Required"),
-    confirmPassword: Yup.string().required("Required"),
-    email: Yup.string()
-      .email("please enter a valid email")
-      .required("Required"),
   });
 
   return (
@@ -63,7 +51,7 @@ export const SignupForm = ({ route }: Props) => {
       >
         <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}></Avatar>
         <Typography component="h1" variant="h5">
-          Sign up
+          Sign In
         </Typography>
         <Formik
           initialValues={initialValues}
@@ -80,16 +68,6 @@ export const SignupForm = ({ route }: Props) => {
                 <Grid item xs={12}>
                   <Input name="password" label="Password" type="password" />
                 </Grid>
-                <Grid item xs={12}>
-                  <Input
-                    name="confirmPassword"
-                    label="Confirm Password"
-                    type="password"
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                  <Input name="email" label="Email Adress" type="email" />
-                </Grid>
               </Grid>
             </Box>
             <Button
@@ -102,8 +80,8 @@ export const SignupForm = ({ route }: Props) => {
             </Button>
             <Grid container justifyContent="flex-end">
               <Grid item>
-                <Link href="/sign-in" variant="body2">
-                  Already have an account? Sign in
+                <Link href="/sign-up" variant="body2">
+                  Don't have an account? Sign Up
                 </Link>
               </Grid>
             </Grid>
