@@ -30,7 +30,8 @@ export const SignInForm = ({ route }: Props) => {
     password: "",
   };
   const onSubmit = async (values: FormValues) => {
-    await axiosInstance.post("signUp", { ...values });
+    await axiosInstance.post("login", { ...values });
+
     navigate(route);
   };
   const validationSchema = Yup.object({
@@ -76,7 +77,7 @@ export const SignInForm = ({ route }: Props) => {
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
-              Sign Up
+              Sign In
             </Button>
             <Grid container justifyContent="flex-end">
               <Grid item>
