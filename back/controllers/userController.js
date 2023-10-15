@@ -1,6 +1,7 @@
 import User from "../models/userSchema.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import { setAccessToken } from "../../front/usersProject/src/axiosInstance";
 
 export const signUpHandler = async (req, res, next) => {
   const { username, password, email } = req.body;
@@ -34,6 +35,7 @@ export const loginHandler = async (req, res, next) => {
     req.user = user;
     const accessToken = jwt.sign({ user: user }, process.env.JWT_SECRET);
     res.json({ accessToken: accessToken });
+    setAccessToken(accessToken);
   } catch (error) {
     console.log(error);
   }

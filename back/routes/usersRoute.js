@@ -8,9 +8,9 @@ import {
 const router = express.Router();
 
 router.post("/login", loginHandler);
-router.get("/list", authenticateToken, (req, res) => {
+router.get("/login", authenticateToken, (req, res) => {
   const username = req.user.user.username;
-  res.json({ username: username });
+  res.json({ message: "username" });
 });
 router.post("/signUp", signUpHandler);
 
