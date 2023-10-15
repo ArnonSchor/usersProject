@@ -1,13 +1,19 @@
 import { useEffect, useState } from "react";
-import axiosInstance from "../axiosInstance";
-
-export const List = async () => {
-  const [message, setMessage] = useState("a");
+import { axiosInstance } from "../axiosInstance";
+export const List = () => {
+  const [message, setMessage] = useState("");
 
   useEffect(() => {
-    fetch("http://localhost:2000/api/list")
-      .then((res) => res.json())
-      .then((data) => setMessage(data.message));
+    const fetchMessage = async () => {
+      try {
+        const response = await axiosInstance.get("list");
+        setMessage(response.data);
+      } catch (error) {
+        console.log("Error fetching data:", error);
+      }
+    };
+    fetchMessage();
   }, []);
+
   return <h1>{message}</h1>;
 };
