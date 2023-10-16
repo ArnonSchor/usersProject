@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import axiosInstance from "../axiosInstance";
+import { axiosInstance } from "../axiosInstance";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import Input from "./Input";
@@ -13,6 +13,7 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import Copyright from "./Copyright";
+import { useEffect } from "react";
 
 interface FormValues {
   username: string;
@@ -49,7 +50,17 @@ export const SignupForm = ({ route }: Props) => {
       .email("please enter a valid email")
       .required("Required"),
   });
-
+  useEffect(() => {
+    const fetchMessage = async () => {
+      try {
+        const response = await axiosInstance.get("login");
+        console.log(response.data);
+      } catch (error) {
+        console.log("Error fetching data:", error);
+      }
+    };
+    fetchMessage();
+  }, []);
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />

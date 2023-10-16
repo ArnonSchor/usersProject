@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import axiosInstance from "../axiosInstance";
+import { axiosInstance } from "../axiosInstance";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import Input from "./Input";
@@ -30,9 +30,12 @@ export const SignInForm = ({ route }: Props) => {
     password: "",
   };
   const onSubmit = async (values: FormValues) => {
-    await axiosInstance.post("login", { ...values });
-
-    navigate(route);
+    try {
+      await axiosInstance.post("login", { ...values });
+      navigate(route);
+    } catch (error) {
+      console.log("you are not authorized:", error);
+    }
   };
   const validationSchema = Yup.object({
     username: Yup.string().required("Required"),

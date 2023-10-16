@@ -7,6 +7,7 @@ export const List = () => {
     const fetchMessage = async () => {
       try {
         const response = await axiosInstance.get("list");
+        console.log(response.data);
         setMessage(response.data);
       } catch (error) {
         console.log("Error fetching data:", error);

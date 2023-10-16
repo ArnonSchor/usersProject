@@ -8,10 +8,12 @@ import {
 const router = express.Router();
 
 router.post("/login", loginHandler);
-router.get("/login", authenticateToken, (req, res) => {
-  const username = req.user.user.username;
-  res.json({ message: "username" });
-});
+router.get("/list", authenticateToken, (req, res) =>
+  res.json({
+    message: "asdf",
+  })
+);
+
 router.post("/signUp", signUpHandler);
 
 export default router;

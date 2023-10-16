@@ -3,10 +3,17 @@ import cors from "cors";
 import connectToDB from "./connectToDB.js";
 import userRouter from "./routes/usersRoute.js";
 import dotenv from "dotenv";
+import cookieParser from "cookie-parser";
 
 dotenv.config();
 const app = express();
-app.use(cors());
+const corsOptions = {
+  origin: "http://localhost:5173",
+  credentials: true,
+};
+
+app.use(cors(corsOptions));
+app.use(cookieParser());
 
 connectToDB().catch((err) => console.log(err));
 
