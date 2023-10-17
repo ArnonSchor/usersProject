@@ -8,7 +8,6 @@ export const List = () => {
       try {
         const response = await axiosInstance.get("list");
         setMessage(response.data.message);
-        console.log(message);
       } catch (error) {
         console.log("Error fetching data:", error);
       }
