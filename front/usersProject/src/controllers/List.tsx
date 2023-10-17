@@ -4,17 +4,15 @@ export const List = () => {
   const [message, setMessage] = useState("");
 
   useEffect(() => {
-    const fetchMessage = async () => {
-      try {
-        const response = await axiosInstance.get("list");
-        console.log(response.data);
-        setMessage(response.data);
-      } catch (error) {
-        console.log("Error fetching data:", error);
-      }
-    };
-    fetchMessage();
+    fetch("http://localhost:2000/api/list")
+      .then((res) => res.json())
+      .then((data) => setMessage(data.message));
   }, []);
 
-  return <h1>{message}</h1>;
+  return (
+    <div>
+      <h1>{message}</h1>
+      <p>weellll</p>
+    </div>
+  );
 };
