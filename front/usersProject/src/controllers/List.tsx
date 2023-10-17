@@ -4,9 +4,16 @@ export const List = () => {
   const [message, setMessage] = useState("");
 
   useEffect(() => {
-    fetch("http://localhost:2000/api/list")
-      .then((res) => res.json())
-      .then((data) => setMessage(data.message));
+    const fetchMessage = async () => {
+      try {
+        const response = await axiosInstance.get("list");
+        setMessage(response.data.message);
+        console.log(message);
+      } catch (error) {
+        console.log("Error fetching data:", error);
+      }
+    };
+    fetchMessage();
   }, []);
 
   return (
