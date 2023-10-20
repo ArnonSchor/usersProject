@@ -16,7 +16,7 @@ export const signUpHandler = async (req, res, next) => {
 
     res.status(200).json({ message: `Successfully created user ${user}` });
   } catch (error) {
-    console.log(JWT_SECRET);
+    console.log("error creating user" + error.message);
   }
 };
 
@@ -38,7 +38,6 @@ export const loginHandler = async (req, res, next) => {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
     });
-    console.log(token);
     res.json({ token: token });
   } catch (error) {
     console.log("there is an error authenticating:", error);
@@ -47,8 +46,6 @@ export const loginHandler = async (req, res, next) => {
 
 export const authenticateToken = (req, res, next) => {
   const token = req.cookies.token;
-  // "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7Il9pZCI6IjY1MmE0M2EyNjk5ZTBkYmU1OWUwMzYwMSIsInVzZXJuYW1lIjoiYXJub24iLCJwYXNzd29yZCI6IiQyYiQxMCRKem9rTVl2ZDQ4ck0wWjhxZUMuUHNlejQuUGdnQWQweFNvY0FyUTVMLmJKbHpPMVVGdlJIUyIsImVtYWlsIjoiYXJub25AYXJub24iLCJfX3YiOjB9LCJpYXQiOjE2OTc1MzY2MzZ9.htbXkeQ3tparUfSAzWAp_eH8cWwi6AKxVm3BEG1l_zk";
-  console.log(token);
   if (token == null) {
     console.log("the token is null");
     return res.sendStatus(403);
@@ -65,9 +62,9 @@ export const authenticateToken = (req, res, next) => {
 };
 
 export const listHandler = async (req, res, next) => {
-  const user = "arnon";
+  const username = req.user.user.username;
   try {
-    res.status(200).json({ message: `hello ${user}` });
+    res.status(200).json({ message: `hello ${username}` });
   } catch (error) {
     console.log(error);
   }

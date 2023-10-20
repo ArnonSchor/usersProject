@@ -18,7 +18,7 @@ export const List = () => {
   return (
     <div>
       <h1>{message}</h1>
-      <p>weellll</p>
+      <p>this is where the app would be</p>
     </div>
   );
 };
