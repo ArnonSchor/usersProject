@@ -24,7 +24,6 @@ interface Props {
 
 export const SignInForm = ({ route }: Props) => {
   const navigate = useNavigate();
-
   const initialValues = {
     username: "",
     password: "",
@@ -34,7 +33,7 @@ export const SignInForm = ({ route }: Props) => {
       await axiosInstance.post("login", { ...values });
       navigate(route);
     } catch (error) {
-      console.log("you are not authorized:", error);
+      console.log(error);
     }
   };
   const validationSchema = Yup.object({
@@ -74,6 +73,7 @@ export const SignInForm = ({ route }: Props) => {
                 </Grid>
               </Grid>
             </Box>
+
             <Button
               type="submit"
               fullWidth

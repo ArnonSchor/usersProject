@@ -13,7 +13,6 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import Copyright from "./Copyright";
-import { useEffect } from "react";
 
 interface FormValues {
   username: string;
@@ -35,32 +34,26 @@ export const SignupForm = ({ route }: Props) => {
     email: "",
   };
   const onSubmit = async (values: FormValues) => {
-    if (values.password === values.confirmPassword) {
-      await axiosInstance.post("signUp", { ...values });
-      navigate(route);
-    } else {
-      alert("passwords do not match!");
-    }
+    await axiosInstance.post("signUp", { ...values });
+    navigate(route);
   };
   const validationSchema = Yup.object({
-    username: Yup.string().required("Required"),
-    password: Yup.string().required("Required"),
-    confirmPassword: Yup.string().required("Required"),
+    username: Yup.string()
+      .min(5, "username should be 5-20 characters long")
+      .max(20, "username should be 5-20 characters long")
+      .required("Required"),
+    password: Yup.string()
+      .min(5, "password is too short")
+      .max(20, "password is long")
+      .required("Required"),
+    confirmPassword: Yup.string()
+      .oneOf([Yup.ref("password")], "Passwords must match")
+      .required("required"),
     email: Yup.string()
       .email("please enter a valid email")
       .required("Required"),
   });
-  useEffect(() => {
-    const fetchMessage = async () => {
-      try {
-        const response = await axiosInstance.get("login");
-        console.log(response.data);
-      } catch (error) {
-        console.log("Error fetching data:", error);
-      }
-    };
-    fetchMessage();
-  }, []);
+
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
@@ -88,10 +81,10 @@ export const SignupForm = ({ route }: Props) => {
                   <Input name="username" type="text" label="Username" />
                 </Grid>
 
-                <Grid item xs={12}>
+                <Grid item xs={6}>
                   <Input name="password" label="Password" type="password" />
                 </Grid>
-                <Grid item xs={12}>
+                <Grid item xs={6}>
                   <Input
                     name="confirmPassword"
                     label="Confirm Password"

@@ -19,7 +19,11 @@ function Input({ name, type, label }: Props) {
         name={name}
         type={type}
       />
-      <ErrorMessage component={errorText} name={name} />
+      <div style={{ height: "20px" }}>
+        <ErrorMessage component={errorText} name={name}>
+          {(msg) => <div style={{ color: "red" }}>{msg}</div>}
+        </ErrorMessage>
+      </div>
     </div>
   );
 }
