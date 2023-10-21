@@ -13,6 +13,7 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import Copyright from "./Copyright";
+import { useState } from "react";
 
 interface FormValues {
   username: string;
@@ -24,16 +25,21 @@ interface Props {
 
 export const SignInForm = ({ route }: Props) => {
   const navigate = useNavigate();
+  const [showPassword, setShowPassword] = useState(false);
+
   const initialValues = {
     username: "",
     password: "",
   };
-  const onSubmit = async (values: FormValues) => {
+  const onSubmit = async (values: FormValues, { setErrors }: any) => {
     try {
       await axiosInstance.post("login", { ...values });
       navigate(route);
     } catch (error) {
       console.log(error);
+      setErrors({
+        password: "Invalid username or password",
+      });
     }
   };
   const validationSchema = Yup.object({
@@ -65,11 +71,23 @@ export const SignInForm = ({ route }: Props) => {
             <Box component="div" sx={{ mt: 3 }}>
               <Grid container spacing={2}>
                 <Grid item xs={12}>
-                  <Input name="username" type="text" label="Username" />
+                  <Input
+                    name="username"
+                    type="text"
+                    label="Username"
+                    showPassword={showPassword}
+                    setShowPassword={setShowPassword}
+                  />
                 </Grid>
 
                 <Grid item xs={12}>
-                  <Input name="password" label="Password" type="password" />
+                  <Input
+                    name="password"
+                    label="Password"
+                    type={!showPassword ? "password" : "text"}
+                    showPassword={showPassword}
+                    setShowPassword={setShowPassword}
+                  />
                 </Grid>
               </Grid>
             </Box>

@@ -13,6 +13,7 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import Copyright from "./Copyright";
+import { useState } from "react";
 
 interface FormValues {
   username: string;
@@ -26,7 +27,7 @@ interface Props {
 
 export const SignupForm = ({ route }: Props) => {
   const navigate = useNavigate();
-
+  const [showPassword, setShowPassword] = useState(false);
   const initialValues = {
     username: "",
     password: "",
@@ -75,24 +76,44 @@ export const SignupForm = ({ route }: Props) => {
           onSubmit={onSubmit}
         >
           <Form>
-            <Box component="div" sx={{ mt: 3 }}>
+            <Box component="div" sx={{ mt: 3, width: "26rem" }}>
               <Grid container spacing={2}>
-                <Grid item xs={12}>
-                  <Input name="username" type="text" label="Username" />
+                <Grid item xs={13}>
+                  <Input
+                    name="username"
+                    type="text"
+                    label="Username"
+                    showPassword={showPassword}
+                    setShowPassword={setShowPassword}
+                  />
                 </Grid>
 
                 <Grid item xs={6}>
-                  <Input name="password" label="Password" type="password" />
+                  <Input
+                    name="password"
+                    label="Password"
+                    type={!showPassword ? "password" : "text"}
+                    showPassword={showPassword}
+                    setShowPassword={setShowPassword}
+                  />
                 </Grid>
                 <Grid item xs={6}>
                   <Input
                     name="confirmPassword"
                     label="Confirm Password"
-                    type="password"
+                    type={!showPassword ? "password" : "text"}
+                    showPassword={showPassword}
+                    setShowPassword={setShowPassword}
                   />
                 </Grid>
                 <Grid item xs={12}>
-                  <Input name="email" label="Email Adress" type="email" />
+                  <Input
+                    name="email"
+                    label="Email Adress"
+                    type="email"
+                    showPassword={showPassword}
+                    setShowPassword={setShowPassword}
+                  />
                 </Grid>
               </Grid>
             </Box>
