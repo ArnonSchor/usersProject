@@ -1,22 +1,54 @@
 import User from "../models/userSchema.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import nodemailer from "nodemailer";
 
 export const signUpHandler = async (req, res, next) => {
-  const { username, password, email } = req.body;
+  const { username, password, email, code } = req.body;
+  const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: "schorarnon@gmail.com",
+      pass: "xixd nvrn hlhp fyqa",
+    },
+  });
+
+  const generateVerificationCode = () => {
+    return Math.floor(100000 + Math.random() * 900000).toString();
+  };
+  const verificationCode = generateVerificationCode();
+
+  const userVerificationCodes = {};
+
+  userVerificationCodes[email] = verificationCode;
+  // Send verification email
+  const mailOptions = {
+    from: "schorarnon@gmail.com",
+    to: email,
+    subject: "Verification Code",
+    html: `<p>Your verification code is: ${verificationCode}</p>`,
+  };
 
   try {
-    const hashedPassword = await bcrypt.hash(password, 10);
+    await transporter.sendMail(mailOptions);
+    try {
+      if (code === verificationCode) {
+        const hashedPassword = await bcrypt.hash(password, 10);
 
-    const user = await User.create({
-      username,
-      password: hashedPassword,
-      email,
-    });
+        const user = await User.create({
+          username,
+          password: hashedPassword,
+          email,
+        });
 
-    res.status(200).json({ message: `Successfully created user ${user}` });
+        res.status(200).json({ message: "User created successfully" });
+      }
+    } catch (error) {
+      console.log("error creating user" + error.message);
+    }
   } catch (error) {
-    console.log("error creating user" + error.message);
+    console.error("Failed to send verification email", error);
+    res.status(500).json({ message: "Failed to send verification email" });
   }
 };
 
@@ -64,7 +96,9 @@ export const authenticateToken = (req, res, next) => {
 export const listHandler = async (req, res, next) => {
   const username = req.user.user.username;
   try {
-    res.status(200).json({ message: `hello ${username}` });
+    res
+      .status(200)
+      .json({ message: username ? `hello ${username}` : "hello guest" });
   } catch (error) {
     console.log(error);
   }

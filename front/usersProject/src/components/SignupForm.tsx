@@ -3,6 +3,8 @@ import { axiosInstance } from "../axiosInstance";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import Input from "./Input";
+import { useState } from "react";
+import VerificationModal from "./VerificationModal";
 
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
@@ -13,7 +15,6 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import Copyright from "./Copyright";
-import { useState } from "react";
 
 interface FormValues {
   username: string;
@@ -28,15 +29,23 @@ interface Props {
 export const SignupForm = ({ route }: Props) => {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
+  const [open, setOpen] = useState(false);
+
   const initialValues = {
     username: "",
     password: "",
     confirmPassword: "",
     email: "",
   };
-  const onSubmit = async (values: FormValues) => {
-    await axiosInstance.post("signUp", { ...values });
-    navigate(route);
+  const handleSubmit = async (values: FormValues) => {
+    try {
+      await axiosInstance.post("signUp", { ...values });
+    } catch (error) {
+      console.log(error);
+    }
+
+    console.log("form submitted");
+    setOpen(true);
   };
   const validationSchema = Yup.object({
     username: Yup.string()
@@ -57,6 +66,7 @@ export const SignupForm = ({ route }: Props) => {
 
   return (
     <Container component="main" maxWidth="xs">
+      <VerificationModal open={open} setOpen={setOpen} />
       <CssBaseline />
       <Box
         sx={{
@@ -73,7 +83,7 @@ export const SignupForm = ({ route }: Props) => {
         <Formik
           initialValues={initialValues}
           validationSchema={validationSchema}
-          onSubmit={onSubmit}
+          onSubmit={handleSubmit}
         >
           <Form>
             <Box component="div" sx={{ mt: 3, width: "26rem" }}>
@@ -87,7 +97,6 @@ export const SignupForm = ({ route }: Props) => {
                     setShowPassword={setShowPassword}
                   />
                 </Grid>
-
                 <Grid item xs={6}>
                   <Input
                     name="password"
