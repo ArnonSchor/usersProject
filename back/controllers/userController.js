@@ -3,8 +3,9 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import nodemailer from "nodemailer";
 
+let verificationCode;
 export const signUpHandler = async (req, res, next) => {
-  const { username, password, email, code } = req.body;
+  const { username, password, email } = req.body;
   const transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
@@ -16,7 +17,7 @@ export const signUpHandler = async (req, res, next) => {
   const generateVerificationCode = () => {
     return Math.floor(100000 + Math.random() * 900000).toString();
   };
-  const verificationCode = generateVerificationCode();
+  verificationCode = generateVerificationCode();
 
   const userVerificationCodes = {};
 
@@ -31,24 +32,28 @@ export const signUpHandler = async (req, res, next) => {
 
   try {
     await transporter.sendMail(mailOptions);
-    try {
-      if (code === verificationCode) {
-        const hashedPassword = await bcrypt.hash(password, 10);
 
-        const user = await User.create({
-          username,
-          password: hashedPassword,
-          email,
-        });
+    const hashedPassword = await bcrypt.hash(password, 10);
 
-        res.status(200).json({ message: "User created successfully" });
-      }
-    } catch (error) {
-      console.log("error creating user" + error.message);
-    }
+    const user = await User.create({
+      username,
+      password: hashedPassword,
+      email,
+    });
+
+    res.status(200).json({ message: "User created successfully" });
   } catch (error) {
     console.error("Failed to send verification email", error);
     res.status(500).json({ message: "Failed to send verification email" });
+  }
+};
+
+export const verificationHandler = async (req, res, next) => {
+  const { code } = req.body;
+  if (code === verificationCode) {
+    res.status(200).json({ message: "verification successful" });
+  } else {
+    res.status(400).json({ message: "Invalid verification code" });
   }
 };
 
@@ -57,7 +62,7 @@ export const loginHandler = async (req, res, next) => {
   try {
     const user = await User.findOne({ username });
     if (!user) {
-      return res.status(401).json({ message: "Invalid username or password" });
+      return res.status(401).json({ error: "Invalid username or password" });
     }
     const isMatch = await bcrypt.compare(password, user.password);
 

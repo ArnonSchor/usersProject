@@ -41,10 +41,8 @@ export const SignupForm = ({ route }: Props) => {
     try {
       await axiosInstance.post("signUp", { ...values });
     } catch (error) {
-      console.log(error);
+      console.log("there was an error:", error);
     }
-
-    console.log("form submitted");
     setOpen(true);
   };
   const validationSchema = Yup.object({

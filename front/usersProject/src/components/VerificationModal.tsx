@@ -15,10 +15,9 @@ interface FormValues {
 }
 const VerificationModal = ({ setOpen, open }: Props) => {
   const handleSubmit = async (values: FormValues) => {
-    await axiosInstance.post("signUp", {
+    await axiosInstance.post("verify", {
       ...values,
     });
-    console.log(values);
   };
   return (
     <Modal
