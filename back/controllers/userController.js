@@ -2,9 +2,10 @@ import User from "../models/userSchema.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import nodemailer from "nodemailer";
+import catchAsync from "../utils/catchAsync.js";
 
 let verificationCode;
-export const signUpHandler = async (req, res, next) => {
+export const signUpHandler = catchAsync(async (req, res, next) => {
   const { username, password, email } = req.body;
   const transporter = nodemailer.createTransport({
     service: "gmail",
@@ -22,31 +23,25 @@ export const signUpHandler = async (req, res, next) => {
   const userVerificationCodes = {};
 
   userVerificationCodes[email] = verificationCode;
-  // Send verification email
   const mailOptions = {
     from: "schorarnon@gmail.com",
     to: email,
-    subject: "Verification Code",
-    html: `<p>Your verification code is: ${verificationCode}</p>`,
+    subject: "The Site Verification Code",
+    html: `<h1>Your verification code is: ${verificationCode}</h1>`,
   };
 
-  try {
-    await transporter.sendMail(mailOptions);
+  await transporter.sendMail(mailOptions);
 
-    const hashedPassword = await bcrypt.hash(password, 10);
+  const hashedPassword = await bcrypt.hash(password, 10);
 
-    const user = await User.create({
-      username,
-      password: hashedPassword,
-      email,
-    });
+  const user = await User.create({
+    username,
+    password: hashedPassword,
+    email,
+  });
 
-    res.status(200).json({ message: "User created successfully" });
-  } catch (error) {
-    console.error("Failed to send verification email", error);
-    res.status(500).json({ message: "Failed to send verification email" });
-  }
-};
+  res.status(200).json({ message: "User created successfully" });
+});
 
 export const verificationHandler = async (req, res, next) => {
   const { code } = req.body;

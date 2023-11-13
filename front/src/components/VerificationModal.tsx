@@ -5,6 +5,7 @@ import Typography from "@mui/material/Typography";
 import styles from "./components.module.scss";
 import { Formik, Form, Field } from "formik";
 import { axiosInstance } from "../axiosInstance";
+import { useNavigate } from "react-router-dom";
 
 interface Props {
   open: boolean;
@@ -14,10 +15,13 @@ interface FormValues {
   code: string;
 }
 const VerificationModal = ({ setOpen, open }: Props) => {
+  const navigate = useNavigate();
+
   const handleSubmit = async (values: FormValues) => {
     await axiosInstance.post("verify", {
       ...values,
     });
+    navigate("/");
   };
   return (
     <Modal

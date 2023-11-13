@@ -1,10 +1,8 @@
-import { useNavigate } from "react-router-dom";
 import { axiosInstance } from "../axiosInstance";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import Input from "./Input";
 import { useState } from "react";
-import VerificationModal from "./VerificationModal";
 
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
@@ -23,13 +21,11 @@ interface FormValues {
   email: string;
 }
 interface Props {
-  route: string;
+  setOpen: (value: boolean) => void;
 }
 
-export const SignupForm = ({ route }: Props) => {
-  const navigate = useNavigate();
+export const SignupForm = ({ setOpen }: Props) => {
   const [showPassword, setShowPassword] = useState(false);
-  const [open, setOpen] = useState(false);
 
   const initialValues = {
     username: "",
@@ -64,7 +60,6 @@ export const SignupForm = ({ route }: Props) => {
 
   return (
     <Container component="main" maxWidth="xs">
-      <VerificationModal open={open} setOpen={setOpen} />
       <CssBaseline />
       <Box
         sx={{
