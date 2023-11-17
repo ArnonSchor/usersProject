@@ -48,7 +48,7 @@ export const verificationHandler = async (req, res, next) => {
   if (code === verificationCode) {
     res.status(200).json({ message: "verification successful" });
   } else {
-    res.status(400).json({ message: "Invalid verification code" });
+    res.status(400).json({ message: "Invalid verification code!" });
   }
 };
 
