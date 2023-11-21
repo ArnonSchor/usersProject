@@ -35,13 +35,16 @@ export const SignupForm = ({ setOpen, setFormValues }: Props) => {
     email: "",
   };
 
-  const handleSubmit = async (values: FormValues) => {
-    setOpen(true);
+  const handleSubmit = async (values: FormValues, { setErrors }: any) => {
     try {
+      setOpen(true);
       setFormValues(values);
       await axiosInstance.post("signUp", { ...values });
     } catch (error) {
       console.log("there was an error:", error);
+      setErrors({
+        email: "email already exists! try signing in or use a different email",
+      });
     }
   };
   const validationSchema = Yup.object({

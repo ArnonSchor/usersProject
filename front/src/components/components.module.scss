@@ -5,20 +5,23 @@
   transform: translate(-50%, -50%);
   background-color: white;
   padding: 2rem;
-  width: 30%;
-  height: 20em;
-  direction: rtl;
+  width: 25%;
+  height: 19em;
   border-radius: 0.3rem;
   display: flex;
   flex-direction: column;
-}
 
-.error {
-  width: 16rem;
-  position: relative;
-  display: flex;
-  margin: 2px auto auto auto;
-  height: 20px;
-  overflow: hidden;
-  color: red;
+  .error {
+    position: relative;
+    display: flex;
+    overflow: hidden;
+    color: red;
+  }
+
+  .verifyBtn {
+    display: flex;
+  }
+  .field {
+    margin: 15px 0 0 0;
+  }
 }

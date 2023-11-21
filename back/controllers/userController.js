@@ -9,6 +9,12 @@ let verificationCode;
 export const signUpHandler = catchAsync(async (req, res, next) => {
   const { username, password, email } = req.body;
 
+  const emailExists = await User.findOne({ email });
+  if (emailExists) {
+    return res.status(400).json({
+      message: `there is already an account with the email: ${email} `,
+    });
+  }
   verificationCode = generateVerificationCode();
 
   const userVerificationCodes = {};

@@ -50,7 +50,12 @@ const VerificationModal = ({ setOpen, open, formValues }: Props) => {
         <CssBaseline />
 
         <Box className={styles.box}>
-          <Typography id="modal-modal-title" variant="h5" component="h2">
+          <Typography
+            sx={{ textAlign: "center" }}
+            id="modal-modal-title"
+            variant="h5"
+            component="h2"
+          >
             Check your email
           </Typography>
           <Typography id="modal-modal-description" sx={{ mt: 2 }}>
@@ -64,6 +69,7 @@ const VerificationModal = ({ setOpen, open, formValues }: Props) => {
           >
             <Form>
               <Field
+                className={styles.field}
                 fullWidth
                 label="verification code"
                 variant="outlined"
@@ -72,10 +78,19 @@ const VerificationModal = ({ setOpen, open, formValues }: Props) => {
                 name="code"
                 type="text"
               />
-              <ErrorMessage name="code">
-                {(msg) => <div style={{ color: "red" }}>{msg}</div>}
-              </ErrorMessage>
-              <Button type="submit"> verify</Button>
+              <div style={{ height: "3em" }}>
+                <ErrorMessage name="code">
+                  {(msg) => <div className={styles.error}>{msg}</div>}
+                </ErrorMessage>
+              </div>
+              <Button
+                className={styles.verifyBtn}
+                variant="contained"
+                fullWidth
+                type="submit"
+              >
+                verify
+              </Button>
             </Form>
           </Formik>
         </Box>
