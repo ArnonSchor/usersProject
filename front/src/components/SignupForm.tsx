@@ -22,9 +22,10 @@ interface FormValues {
 }
 interface Props {
   setOpen: (value: boolean) => void;
+  setFormValues: (value: FormValues) => void;
 }
 
-export const SignupForm = ({ setOpen }: Props) => {
+export const SignupForm = ({ setOpen, setFormValues }: Props) => {
   const [showPassword, setShowPassword] = useState(false);
 
   const initialValues = {
@@ -33,13 +34,15 @@ export const SignupForm = ({ setOpen }: Props) => {
     confirmPassword: "",
     email: "",
   };
+
   const handleSubmit = async (values: FormValues) => {
+    setOpen(true);
     try {
+      setFormValues(values);
       await axiosInstance.post("signUp", { ...values });
     } catch (error) {
       console.log("there was an error:", error);
     }
-    setOpen(true);
   };
   const validationSchema = Yup.object({
     username: Yup.string()

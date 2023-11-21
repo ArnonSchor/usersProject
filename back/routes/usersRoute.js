@@ -11,7 +11,6 @@ const router = express.Router();
 
 router.post("/login", loginHandler);
 router.get("/list", authenticateToken, listHandler);
-
 router.post("/signUp", signUpHandler);
 router.post("/verify", verificationHandler);
 

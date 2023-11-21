@@ -3,25 +3,39 @@ import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import Typography from "@mui/material/Typography";
 import styles from "./components.module.scss";
-import { Formik, Form, Field } from "formik";
+import { Formik, Form, Field, ErrorMessage } from "formik";
 import { axiosInstance } from "../axiosInstance";
 import { useNavigate } from "react-router-dom";
+import * as Yup from "yup";
 
 interface Props {
   open: boolean;
   setOpen: (value: boolean) => void;
+  formValues: {};
 }
 interface FormValues {
   code: string;
 }
-const VerificationModal = ({ setOpen, open }: Props) => {
+const VerificationModal = ({ setOpen, open, formValues }: Props) => {
   const navigate = useNavigate();
 
-  const handleSubmit = async (values: FormValues) => {
-    await axiosInstance.post("verify", {
-      ...values,
-    });
-    navigate("/");
+  const validationSchema = Yup.object({
+    code: Yup.string().required("Required"),
+  });
+
+  const handleSubmit = async (values: FormValues, { setErrors }: any) => {
+    try {
+      await axiosInstance.post("verify", {
+        ...values,
+        ...formValues,
+      });
+      navigate("/");
+    } catch (error) {
+      console.log(error);
+      setErrors({
+        code: "Invalid varification code",
+      });
+    }
   };
   return (
     <Modal
@@ -43,7 +57,11 @@ const VerificationModal = ({ setOpen, open }: Props) => {
             We sent a verification code to your email address. please insert the
             code below.
           </Typography>
-          <Formik initialValues={{ code: "" }} onSubmit={handleSubmit}>
+          <Formik
+            initialValues={{ code: "" }}
+            onSubmit={handleSubmit}
+            validationSchema={validationSchema}
+          >
             <Form>
               <Field
                 fullWidth
@@ -54,6 +72,9 @@ const VerificationModal = ({ setOpen, open }: Props) => {
                 name="code"
                 type="text"
               />
+              <ErrorMessage name="code">
+                {(msg) => <div style={{ color: "red" }}>{msg}</div>}
+              </ErrorMessage>
               <Button type="submit"> verify</Button>
             </Form>
           </Formik>

@@ -12,5 +12,9 @@ export default (err, req, res, next) => {
   });
 
   if (err.code === "11000") {
+    res.json({
+      message:
+        "there is an existing account with that email! please try logging in or use a different email address",
+    });
   }
 };
