@@ -2,10 +2,10 @@ import express from "express";
 import {
   loginHandler,
   signUpHandler,
-  authenticateToken,
   listHandler,
   verificationHandler,
 } from "../controllers/userController.js";
+import { authenticateToken } from "../middlewares/userAuth.js";
 
 const router = express.Router();
 

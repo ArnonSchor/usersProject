@@ -1,9 +1,10 @@
 import User from "../models/userSchema.js";
 import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
 import catchAsync from "../utils/catchAsync.js";
-import generateVerificationCode from "../utils/generateVerificationCode.js";
+import generateVerificationCode from "../services/generateVerificationCode.js";
 import transporter from "../utils/transporter.js";
+import generateToken from "../services/generateToken.js";
+import { UNAUTHORIZED, BAD_REQUEST, OK } from "../constants/statusCodes.js";
 
 let verificationCode;
 export const signUpHandler = catchAsync(async (req, res, next) => {
@@ -11,7 +12,7 @@ export const signUpHandler = catchAsync(async (req, res, next) => {
 
   const emailExists = await User.findOne({ email });
   if (emailExists) {
-    return res.status(400).json({
+    return res.status(BAD_REQUEST).json({
       message: `there is already an account with the email: ${email} `,
     });
   }
@@ -20,6 +21,7 @@ export const signUpHandler = catchAsync(async (req, res, next) => {
   const userVerificationCodes = {};
 
   userVerificationCodes[email] = verificationCode;
+
   const mailOptions = {
     from: "schorarnon@gmail.com",
     to: email,
@@ -29,13 +31,13 @@ export const signUpHandler = catchAsync(async (req, res, next) => {
 
   await transporter.sendMail(mailOptions);
 
-  res.status(200).json({ message: "Email sent!" });
+  res.status(OK).json({ message: "Email sent!" });
 });
 
 export const verificationHandler = catchAsync(async (req, res, next) => {
   const { username, password, email, code } = req.body;
   if (code !== verificationCode) {
-    res.status(400).json({ message: "Invalid verification code!" });
+    res.status(BAD_REQUEST).json({ message: "Invalid verification code!" });
   }
   const hashedPassword = await bcrypt.hash(password, 10);
   await User.create({
@@ -43,7 +45,7 @@ export const verificationHandler = catchAsync(async (req, res, next) => {
     password: hashedPassword,
     email,
   });
-  res.status(200).json({ message: "User created successfully" });
+  res.status(OK).json({ message: "User created successfully" });
 });
 
 export const loginHandler = catchAsync(async (req, res, next) => {
@@ -51,48 +53,37 @@ export const loginHandler = catchAsync(async (req, res, next) => {
 
   const user = await User.findOne({ username });
   if (!user) {
-    return res.status(401).json({ error: "Invalid username or password" });
+    return res
+      .status(UNAUTHORIZED)
+      .json({ error: "Invalid username or password" });
   }
   const isMatch = await bcrypt.compare(password, user.password);
 
   if (!isMatch) {
-    return res.status(401).json({ error: "Invalid username or password" });
+    return res
+      .status(UNAUTHORIZED)
+      .json({ error: "Invalid username or password" });
   }
 
   req.user = user;
-  const token = jwt.sign({ user: user }, process.env.JWT_SECRET, {
-    expiresIn: "90d",
-  });
+  const token = generateToken();
 
   res.cookie("token", token, {
+    httpOnly: true,
+    secure: false,
+  });
+  res.cookie("username", user.username, {
     httpOnly: true,
     secure: false,
   });
   res.json({ token: token });
 });
 
-export const authenticateToken = catchAsync(async (req, res, next) => {
-  const token = req.cookies.token;
-  if (token == null) {
-    console.log("the token is null");
-    return res.sendStatus(401);
-  }
-  jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
-    if (err) {
-      console.log("error verifying:", err);
-      return res.status(401);
-    }
-    req.user = user;
-  });
-
-  next();
-});
-
 export const listHandler = async (req, res, next) => {
-  const username = req.user.user.username;
+  const username = req.cookies.username;
   try {
     res
-      .status(200)
+      .status(OK)
       .json({ message: username ? `hello ${username}` : "hello guest" });
   } catch (error) {
     console.log(error);

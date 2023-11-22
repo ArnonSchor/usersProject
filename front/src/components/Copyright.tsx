@@ -9,12 +9,12 @@ function Copyright(props: any) {
       align="center"
       {...props}
     >
-      {"Copyright © "}
+      "Copyright © "
       <Link color="inherit" href="/">
         Your Website
-      </Link>{" "}
+      </Link>
       {new Date().getFullYear()}
-      {"."}
+      "."
     </Typography>
   );
 }
