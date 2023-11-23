@@ -6,7 +6,7 @@ import Signup from "./controllers/Signup.tsx";
 import ErrorPage from "./controllers/ErrorPage.tsx";
 import { HomePage } from "./controllers/HomePage.tsx";
 import SignIn from "./controllers/SignIn.tsx";
-import { List } from "./controllers/List.tsx";
+import { TheSite } from "./controllers/TheSite.tsx";
 
 const router = createBrowserRouter([
   {
@@ -25,8 +25,8 @@ const router = createBrowserRouter([
     errorElement: <ErrorPage />,
   },
   {
-    path: "/List",
-    element: <List />,
+    path: "/the-site",
+    element: <TheSite />,
     errorElement: <ErrorPage />,
   },
 ]);

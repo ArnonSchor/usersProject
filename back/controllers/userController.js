@@ -79,7 +79,7 @@ export const loginHandler = catchAsync(async (req, res, next) => {
   res.json({ token: token });
 });
 
-export const listHandler = async (req, res, next) => {
+export const TheSiteHandler = async (req, res, next) => {
   const username = req.cookies.username;
   try {
     res
