@@ -1,10 +1,10 @@
 import express from "express";
 import cors from "cors";
-import connectToDB from "./connectToDB.js";
-import userRouter from "./routes/usersRoute.js";
+import connectToDB from "./connectToDB";
+import userRouter from "./routes/usersRoute";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
-import errorHandler from "./middlewares/errorHandler.js";
+import errorHandler from "./middlewares/errorHandler";
 
 dotenv.config();
 const app = express();

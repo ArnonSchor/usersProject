@@ -33,7 +33,7 @@ const VerificationModal = ({ setOpen, open, formValues }: Props) => {
     } catch (error) {
       console.log(error);
       setErrors({
-        code: "Invalid varification code",
+        code: "Invalid verification code",
       });
     }
   };
@@ -74,7 +74,6 @@ const VerificationModal = ({ setOpen, open, formValues }: Props) => {
                 label="verification code"
                 variant="outlined"
                 as={TextField}
-                required
                 name="code"
                 type="text"
               />

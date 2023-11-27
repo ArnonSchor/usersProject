@@ -4,8 +4,8 @@ import {
   signUpHandler,
   TheSiteHandler,
   verificationHandler,
-} from "../controllers/userController.js";
-import { authenticateToken } from "../middlewares/userAuth.js";
+} from "../controllers/userController";
+import { authenticateToken } from "../middlewares/userAuth";
 
 const router = express.Router();
 

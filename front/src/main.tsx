@@ -2,12 +2,14 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { QueryClientProvider, QueryClient } from "react-query";
 import Signup from "./controllers/Signup.tsx";
 import ErrorPage from "./controllers/ErrorPage.tsx";
 import { HomePage } from "./controllers/HomePage.tsx";
 import SignIn from "./controllers/SignIn.tsx";
 import { TheSite } from "./controllers/TheSite.tsx";
 
+const queryClient = new QueryClient();
 const router = createBrowserRouter([
   {
     path: "/",
@@ -30,8 +32,11 @@ const router = createBrowserRouter([
     errorElement: <ErrorPage />,
   },
 ]);
+
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <QueryClientProvider client={queryClient}>
+      <RouterProvider router={router} />
+    </QueryClientProvider>
   </React.StrictMode>
 );

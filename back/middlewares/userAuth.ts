@@ -1,9 +1,9 @@
-import catchAsync from "../utils/catchAsync.js";
-import { config } from "../config/config.js";
+import catchAsync from "../utils/catchAsync";
+import { config } from "../config/config";
 import jwt from "jsonwebtoken";
-import { UNAUTHORIZED } from "../constants/statusCodes.js";
+import { UNAUTHORIZED } from "../constants/statusCodes";
 import { NextFunction, Request, Response } from "express";
-import { AppError } from "../utils/appError.js";
+import { AppError } from "../utils/appError";
 
 interface AuthenticatedRequest extends Request {
   user?: any;

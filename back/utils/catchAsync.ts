@@ -1,5 +1,7 @@
-const catchAsync = (fn) => {
-  return (req, res, next) => {
+import { NextFunction, Request, Response } from "express";
+
+const catchAsync = (fn: Function) => {
+  return (req: Request, res: Response, next: NextFunction) => {
     fn(req, res, next).catch(next);
   };
 };

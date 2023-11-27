@@ -1,85 +1,95 @@
-import User from "../models/userSchema.js";
+import User from "../models/userSchema";
 import bcrypt from "bcrypt";
-import catchAsync from "../utils/catchAsync.js";
-import generateVerificationCode from "../services/generateVerificationCode.js";
-import transporter from "../utils/transporter.js";
-import generateToken from "../services/generateToken.js";
-import { UNAUTHORIZED, BAD_REQUEST, OK } from "../constants/statusCodes.js";
+import catchAsync from "../utils/catchAsync";
+import generateVerificationCode from "../services/generateVerificationCode";
+import transporter from "../utils/transporter";
+import generateToken from "../services/generateToken";
+import { UNAUTHORIZED, BAD_REQUEST, OK } from "../constants/statusCodes";
+import { NextFunction, Request, Response } from "express";
 
-let verificationCode;
-export const signUpHandler = catchAsync(async (req, res, next) => {
-  const { username, password, email } = req.body;
+let verificationCode: string;
+export const signUpHandler = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { username, password, email } = req.body;
 
-  const emailExists = await User.findOne({ email });
-  if (emailExists) {
-    return res.status(BAD_REQUEST).json({
-      message: `there is already an account with the email: ${email} `,
+    const emailExists = await User.findOne({ email });
+    if (emailExists) {
+      return res.status(BAD_REQUEST).json({
+        message: `there is already an account with the email: ${email} `,
+      });
+    }
+    verificationCode = generateVerificationCode();
+
+    const mailOptions = {
+      from: "schorarnon@gmail.com",
+      to: email,
+      subject: "The Site Verification Code",
+      html: `<h1>Your verification code is: ${verificationCode}</h1>`,
+    };
+
+    await transporter.sendMail(mailOptions);
+
+    res.status(OK).json({ message: "Email sent!" });
+  }
+);
+
+export const verificationHandler = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { username, password, email, code } = req.body;
+    if (code !== verificationCode) {
+      return res
+        .status(BAD_REQUEST)
+        .json({ message: "Invalid verification code!" });
+    }
+    const hashedPassword = await bcrypt.hash(password, 10);
+    await User.create({
+      username,
+      password: hashedPassword,
+      email,
     });
+    res.status(OK).json({ message: "User created successfully" });
   }
-  verificationCode = generateVerificationCode();
+);
 
-  const userVerificationCodes = {};
+export const loginHandler = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { username, password } = req.body;
 
-  userVerificationCodes[email] = verificationCode;
+    const user = await User.findOne({ username });
+    if (!user) {
+      return res
+        .status(UNAUTHORIZED)
+        .json({ error: "Invalid username or password" });
+    }
+    const isMatch = bcrypt.compare(password, user.password);
 
-  const mailOptions = {
-    from: "schorarnon@gmail.com",
-    to: email,
-    subject: "The Site Verification Code",
-    html: `<h1>Your verification code is: ${verificationCode}</h1>`,
-  };
+    if (!isMatch) {
+      return res
+        .status(UNAUTHORIZED)
+        .json({ error: "Invalid username or password" });
+    }
 
-  await transporter.sendMail(mailOptions);
+    req.body.user = user;
+    console.log(user);
+    const token = generateToken();
 
-  res.status(OK).json({ message: "Email sent!" });
-});
-
-export const verificationHandler = catchAsync(async (req, res, next) => {
-  const { username, password, email, code } = req.body;
-  if (code !== verificationCode) {
-    res.status(BAD_REQUEST).json({ message: "Invalid verification code!" });
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: false,
+    });
+    res.cookie("username", user.username, {
+      httpOnly: true,
+      secure: false,
+    });
+    res.json({ token: token });
   }
-  const hashedPassword = await bcrypt.hash(password, 10);
-  await User.create({
-    username,
-    password: hashedPassword,
-    email,
-  });
-  res.status(OK).json({ message: "User created successfully" });
-});
+);
 
-export const loginHandler = catchAsync(async (req, res, next) => {
-  const { username, password } = req.body;
-
-  const user = await User.findOne({ username });
-  if (!user) {
-    return res
-      .status(UNAUTHORIZED)
-      .json({ error: "Invalid username or password" });
-  }
-  const isMatch = await bcrypt.compare(password, user.password);
-
-  if (!isMatch) {
-    return res
-      .status(UNAUTHORIZED)
-      .json({ error: "Invalid username or password" });
-  }
-
-  req.user = user;
-  const token = generateToken();
-
-  res.cookie("token", token, {
-    httpOnly: true,
-    secure: false,
-  });
-  res.cookie("username", user.username, {
-    httpOnly: true,
-    secure: false,
-  });
-  res.json({ token: token });
-});
-
-export const TheSiteHandler = async (req, res, next) => {
+export const TheSiteHandler = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   const username = req.cookies.username;
   try {
     res

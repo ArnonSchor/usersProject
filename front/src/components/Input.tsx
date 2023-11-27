@@ -19,7 +19,6 @@ function Input({ name, type, label, showPassword, setShowPassword }: Props) {
         label={label}
         variant="outlined"
         as={TextField}
-        required
         name={name}
         type={type}
         InputProps={{

@@ -3,6 +3,7 @@ import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import Input from "./Input";
 import { useState } from "react";
+import { useMutation, useQuery } from "react-query";
 
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
@@ -35,11 +36,22 @@ export const SignupForm = ({ setOpen, setFormValues }: Props) => {
     email: "",
   };
 
+  const mutation = useMutation(
+    (values: FormValues) => axiosInstance.post("signUp", { ...values }),
+    {
+      onSuccess: () => {
+        setOpen(true);
+      },
+      onError: (error) => {
+        console.error("There was an error:", error);
+      },
+    }
+  );
+
   const handleSubmit = async (values: FormValues, { setErrors }: any) => {
     try {
-      setOpen(true);
       setFormValues(values);
-      await axiosInstance.post("signUp", { ...values });
+      await mutation.mutateAsync(values);
     } catch (error) {
       console.log("there was an error:", error);
       setErrors({
@@ -131,7 +143,7 @@ export const SignupForm = ({ setOpen, setFormValues }: Props) => {
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
-              Sign Up
+              {mutation.isLoading ? "Signing Up..." : "Sign Up"}
             </Button>
             <Grid container justifyContent="flex-end">
               <Grid item>
