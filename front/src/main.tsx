@@ -3,11 +3,11 @@ import ReactDOM from "react-dom/client";
 import "./index.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { QueryClientProvider, QueryClient } from "react-query";
-import Signup from "./controllers/Signup.tsx";
-import ErrorPage from "./controllers/ErrorPage.tsx";
-import { HomePage } from "./controllers/HomePage.tsx";
-import SignIn from "./controllers/SignIn.tsx";
-import { TheSite } from "./controllers/TheSite.tsx";
+import Signup from "./pages/Signup.tsx";
+import ErrorPage from "./pages/ErrorPages/ErrorPage.tsx";
+import { HomePage } from "./pages/HomePage.tsx";
+import SignIn from "./pages/SignIn.tsx";
+import { TheSite } from "./pages/TheSite.tsx";
 import ProtectRoute from "./components/ProtectedRoute.tsx";
 
 const queryClient = new QueryClient();

@@ -1,12 +1,12 @@
 import { userAtom } from "../../atoms";
 
 import { useAtom } from "jotai";
-import NoAuthorization from "./NoAuthorization";
+import PageNotFound from "../pages/ErrorPages/PageNotFound";
 
 const ProtectRoute = ({ children }: any) => {
   const [user] = useAtom(userAtom);
 
-  return user === "" ? <NoAuthorization /> : <>{children}</>;
+  return user === "" ? <PageNotFound /> : <>{children}</>;
 };
 
 export default ProtectRoute;
