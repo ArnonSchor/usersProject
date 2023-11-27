@@ -3,6 +3,8 @@ import { axiosInstance } from "../axiosInstance";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import Input from "./Input";
+import { useAtom } from "jotai";
+import { userAtom } from "../../atoms";
 
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
@@ -26,6 +28,7 @@ interface Props {
 export const SignInForm = ({ route }: Props) => {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
+  const [user, setUser] = useAtom(userAtom);
 
   const initialValues = {
     username: "",
@@ -34,6 +37,8 @@ export const SignInForm = ({ route }: Props) => {
   const onSubmit = async (values: FormValues, { setErrors }: any) => {
     try {
       await axiosInstance.post("login", { ...values });
+      setUser(values.username);
+      console.log(user);
       navigate(route);
     } catch (error) {
       console.log(error);

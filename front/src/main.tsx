@@ -8,6 +8,7 @@ import ErrorPage from "./controllers/ErrorPage.tsx";
 import { HomePage } from "./controllers/HomePage.tsx";
 import SignIn from "./controllers/SignIn.tsx";
 import { TheSite } from "./controllers/TheSite.tsx";
+import ProtectRoute from "./components/ProtectedRoute.tsx";
 
 const queryClient = new QueryClient();
 const router = createBrowserRouter([
@@ -28,7 +29,11 @@ const router = createBrowserRouter([
   },
   {
     path: "/the-site",
-    element: <TheSite />,
+    element: (
+      <ProtectRoute>
+        <TheSite />
+      </ProtectRoute>
+    ),
     errorElement: <ErrorPage />,
   },
 ]);

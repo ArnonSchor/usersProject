@@ -52,10 +52,13 @@ export const SignupForm = ({ setOpen, setFormValues }: Props) => {
     try {
       setFormValues(values);
       await mutation.mutateAsync(values);
-    } catch (error) {
+    } catch (error: any) {
       console.log("there was an error:", error);
       setErrors({
-        email: "email already exists! try signing in or use a different email",
+        email:
+          error.message === "Request failed with status code 421"
+            ? "email already exists! try logging in"
+            : "An error has occurred, please try again later",
       });
     }
   };
@@ -142,6 +145,7 @@ export const SignupForm = ({ setOpen, setFormValues }: Props) => {
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
+              disabled={mutation.isLoading && true}
             >
               {mutation.isLoading ? "Signing Up..." : "Sign Up"}
             </Button>

@@ -4,7 +4,12 @@ import catchAsync from "../utils/catchAsync";
 import generateVerificationCode from "../services/generateVerificationCode";
 import transporter from "../utils/transporter";
 import generateToken from "../services/generateToken";
-import { UNAUTHORIZED, BAD_REQUEST, OK } from "../constants/statusCodes";
+import {
+  UNAUTHORIZED,
+  BAD_REQUEST,
+  OK,
+  MISDIRECTED_REQUEST,
+} from "../constants/statusCodes";
 import { NextFunction, Request, Response } from "express";
 
 let verificationCode: string;
@@ -14,7 +19,7 @@ export const signUpHandler = catchAsync(
 
     const emailExists = await User.findOne({ email });
     if (emailExists) {
-      return res.status(BAD_REQUEST).json({
+      return res.status(MISDIRECTED_REQUEST).json({
         message: `there is already an account with the email: ${email} `,
       });
     }
@@ -70,32 +75,23 @@ export const loginHandler = catchAsync(
     }
 
     req.body.user = user;
-    console.log(user);
+
     const token = generateToken();
 
     res.cookie("token", token, {
       httpOnly: true,
-      secure: false,
+      secure: true,
     });
-    res.cookie("username", user.username, {
+    res.cookie("user", user, {
       httpOnly: true,
-      secure: false,
+      secure: true,
     });
-    res.json({ token: token });
+    res.json({ message: "token granted" });
   }
 );
 
-export const TheSiteHandler = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  const username = req.cookies.username;
-  try {
-    res
-      .status(OK)
-      .json({ message: username ? `hello ${username}` : "hello guest" });
-  } catch (error) {
-    console.log(error);
+export const TheSiteHandler = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    res.status(OK).json({ message: 1234 });
   }
-};
+);
